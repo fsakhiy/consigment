@@ -17,7 +17,7 @@ export default async function DashboardRootLayout({
   }
 
   // Type assertion to ensure that `session.user` is defined
-  const { user } = session;
+  // const { user } = session;
 
   return (
     <div className="flex">
