@@ -1,5 +1,6 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
+import Image from 'next/image';
 
 export default async function HomePage() {
   const session = await getSession();
@@ -15,7 +16,13 @@ export default async function HomePage() {
 
   return (
     <div>
-      <img src={user.picture} alt={user.name} />
+      {/* <img src={user.picture} alt={user.name} /> */}
+      <Image 
+      src={user.picture}
+      alt={user.name}
+      height={0}
+      width={80}
+      />
       <h2>{user.name}</h2>
       <p>{user.email}</p>
       <a href='/api/auth/logout'>log out</a>
