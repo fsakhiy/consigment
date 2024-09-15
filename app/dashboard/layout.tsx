@@ -24,7 +24,9 @@ export default async function DashboardRootLayout({
       <Sidebar />
       <main className="w-full flex-1 overflow-hidden">
         <Header />
-        {children}
+        <div className="">
+          {children}
+        </div>
       </main>
     </div>
   );
