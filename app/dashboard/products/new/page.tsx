@@ -14,11 +14,6 @@ export default function Products() {
       <div className="space-y-2">
         <Breadcrumbs items={breadcrumbItems} />
         <ProductForm
-          categories={[
-            { _id: "shirts", name: "shirts" },
-            { _id: "pants", name: "pants" },
-          ]}
-          initialData={undefined}
         />
       </div>
     </PageContainer>
