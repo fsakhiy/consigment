@@ -13,3 +13,71 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
+model Product {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  sku         String?       @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  purchases   Purchase[]
+  Inventory   Inventory?
+  Consignment Consignment[]
+}
+
+model Purchase {
+  id           Int      @id @default(autoincrement())
+  product      Product  @relation(fields: [productId], references: [id])
+  productId    Int
+  quantity     Int
+  itemCost     Float
+  totalCost    Float
+  purchaseDate DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Inventory {
+  id        Int      @id @default(autoincrement())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @unique
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAT DateTime @updatedAt
+}
+
+model Shop {
+  id          Int           @id @default(autoincrement())
+  name        String
+  location    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Consignment Consignment[]
+}
+
+model Consignment {
+  id        Int       @id @default(autoincrement())
+  product   Product   @relation(fields: [productId], references: [id])
+  productId Int
+  shop      Shop      @relation(fields: [shopId], references: [id])
+  shopId    Int
+  quantity  Int
+  itemCost  Float
+  ammount   Float
+  isPaid    Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Payment   Payment[]
+}
+
+model Payment {
+  id             Int         @id @default(autoincrement())
+  consignment    Consignment @relation(fields: [consignmentId], references: [id])
+  consignmentId  Int
+  isPaidFull     Boolean     @default(true)
+  paymentAmmount Float
+  paymentDate    DateTime
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
