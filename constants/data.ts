@@ -122,6 +122,12 @@ export const navItems: NavItem[] = [
     href: '/dashboard/inventory',
     icon: 'ellipsis',
     label: 'Inventory'
+  },
+  {
+    title: 'Products',
+    href: '/dashboard/products',
+    icon: 'pizza',
+    label: 'Products'
   }
   // {
   //   title: 'User',
