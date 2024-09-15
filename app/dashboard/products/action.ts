@@ -1,7 +1,6 @@
 "use server";
 import { productFormSchema } from "@/components/forms/products";
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -23,15 +22,13 @@ const createProduct = async (values: z.infer<typeof productFormSchema>) => {
     });
 
     return data;
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
-          // SKU already exists
-          throw new Error('SKU already exists');
-        }
-      }
-      throw new Error('Something went wrong');
-  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.code === "P2002") {
+      // SKU already exists
+      throw new Error("SKU already exists");
+    }
+    throw new Error("Something went wrong");
   }
 };
 export { getProducts, createProduct };
