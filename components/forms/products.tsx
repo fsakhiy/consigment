@@ -19,48 +19,85 @@ import { Heading } from "../ui/heading";
 import { Separator } from "../ui/separator";
 // import { toast, useToast } from "../ui/use-toast";
 import { Toaster } from "../ui/toaster";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { createProduct } from "@/app/dashboard/products/action";
+import { description } from "../charts/bar-graph";
 
-
-const formSchema = z.object({
+export const productFormSchema = z.object({
   name: z.string().min(3, {
     message: "Name must be at least 3 characters.",
   }),
   description: z.string().min(3, {
-    message: "Descriptoin must be at least 3 characters."
+    message: "Descriptoin must be at least 3 characters.",
   }),
-  price: z.coerce.number()
+  sku: z.string().min(3, {
+    message: "Descriptoin must be at least 3 characters.",
+  }),
 });
 
 export function ProductForm() {
   // ...
-  const { toast } = useToast()
-  
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof productFormSchema>>({
+    resolver: zodResolver(productFormSchema),
     defaultValues: {
       name: "",
-      description : "",
-      price: 0,
+      description: "",
+      sku: "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof productFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     // console.log(values);
+    setLoading(true);
+
+    try {
+      await createProduct(values);
+      setLoading(false);
+      toast({
+        title: "Product Created Successfully",
+      });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      setLoading(false);
+
+      // Check if the error is related to the SKU already existing
+      if (e.message === "SKU already exists") {
+        toast({
+          variant: "destructive",
+          title: "SKU Error",
+          description: "The SKU already exists. Please choose another one.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          description: "An error occurred while creating the product.",
+        });
+      }
+    }
   }
 
   return (
     <>
-    <Toaster />
+      <Toaster />
       <div className="flex items-center justify-between">
-        <Heading title="Create Product" description="fill the form below to create a new product." />
+        <Heading
+          title="Create Product"
+          description="fill the form below to create a new product."
+        />
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-8"
+        >
           <div className="gap-8 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
@@ -69,7 +106,11 @@ export function ProductForm() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Keripik Kentang" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Keripik Kentang"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,7 +123,11 @@ export function ProductForm() {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Keripik Kentar rasa Balado" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Keripik Kentar rasa Balado"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -90,19 +135,25 @@ export function ProductForm() {
             />
             <FormField
               control={form.control}
-              name="price"
+              name="sku"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>SKU</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Product SKU"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <Button type="submit">Submit</Button>
+          <Button disabled={loading} type="submit">
+            Submit
+          </Button>
         </form>
       </Form>
     </>
