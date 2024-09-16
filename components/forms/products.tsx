@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -55,37 +56,34 @@ export function ProductForm() {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     // console.log(values);
+
     setLoading(true);
 
     try {
-      await createProduct(values);
+      const result = await createProduct(values);
+
       setLoading(false);
-      toast({
-        title: "Product Created Successfully",
-      });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      if (result.success) {
+        toast({
+          title: "Product Created Successfully",
+        });
+      } else {
+        // Display the error message from the server
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: result.error, // Error message returned from the server
+        });
+      }
     } catch (e: any) {
       setLoading(false);
-
-      // Check if the error is related to the SKU already existing
-      // if (e.message === "SKU already exists") {
-      //   toast({
-      //     variant: "destructive",
-      //     title: "SKU Error",
-      //     description: "The SKU already exists. Please choose another one.",
-      //   });
-      // } else {
-      //   toast({
-      //     variant: "destructive",
-      //     description: "An error occurred while creating the product.",
-      //   });
-      // }
-
+      // Fallback in case of unexpected errors
       toast({
         variant: "destructive",
-        title: "Cannot create a new product",
-        description: e.message,
-      })
+        title: "Error",
+        description: "An unexpected error occurred.",
+      });
     }
   }
 

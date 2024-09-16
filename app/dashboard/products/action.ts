@@ -3,7 +3,7 @@ import { productFormSchema } from "@/components/forms/products";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
 
 const getProducts = async () => {
   revalidatePath("/dashboard/products");
@@ -22,16 +22,18 @@ const createProduct = async (values: z.infer<typeof productFormSchema>) => {
       },
     });
 
-    return data;
+    // return data;
+    return { success: true, data };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        // SKU already exists
-        throw new Error("SKU already exists");
-      }
+    if (error.code === "P2002" && error.meta?.target?.includes("sku")) {
+      // SKU already exists
+      return {
+        success: false,
+        error: "SKU already exists. Please choose another.",
+      };
     }
-    throw new Error("Something went wrong");
+    return { success: false, error: "An unexpected error occurred." };
   }
 };
 export { getProducts, createProduct };
