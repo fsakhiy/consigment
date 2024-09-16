@@ -23,6 +23,7 @@ const createProduct = async (values: z.infer<typeof productFormSchema>) => {
     });
 
     // return data;
+    revalidatePath('/dashboard/products')
     return { success: true, data };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
