@@ -6,13 +6,28 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { getProducts } from "./action";
+import { DataTable } from "@/components/ui/data-table";
+import { Product, productTableColumn } from "./columns";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
   { title: "Products", link: "/dashboard/products" },
 ];
 
-export default function Products() {
+export default async function Products() {
+  const product = await getProducts()
+  console.log(product)
+  const products: Product[] = []
+  product.map((item, index) => {
+    products.push({
+      id: index,
+      name: item.name,
+      sku: item.sku || '' ,
+      description: item.description || 'no description'
+    })
+  })
+  
   return (
     <PageContainer>
       <div className="space-y-4">
@@ -33,6 +48,7 @@ export default function Products() {
           </Link>
         </div>
         <Separator />
+        <DataTable columns={productTableColumn} data={products} />
       </div>
     </PageContainer>
   );
