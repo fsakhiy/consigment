@@ -68,18 +68,24 @@ export function ProductForm() {
       setLoading(false);
 
       // Check if the error is related to the SKU already existing
-      if (e.message === "SKU already exists") {
-        toast({
-          variant: "destructive",
-          title: "SKU Error",
-          description: "The SKU already exists. Please choose another one.",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          description: "An error occurred while creating the product.",
-        });
-      }
+      // if (e.message === "SKU already exists") {
+      //   toast({
+      //     variant: "destructive",
+      //     title: "SKU Error",
+      //     description: "The SKU already exists. Please choose another one.",
+      //   });
+      // } else {
+      //   toast({
+      //     variant: "destructive",
+      //     description: "An error occurred while creating the product.",
+      //   });
+      // }
+
+      toast({
+        variant: "destructive",
+        title: "Cannot create a new product",
+        description: e.message,
+      })
     }
   }
 
