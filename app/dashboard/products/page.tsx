@@ -21,7 +21,7 @@ export default async function Products() {
   const products: Product[] = []
   product.map((item, index) => {
     products.push({
-      id: index,
+      id: index + 1,
       name: item.name,
       sku: item.sku || '' ,
       description: item.description || 'no description'
