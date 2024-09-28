@@ -20,7 +20,7 @@ const DeleteButton: React.FC<DeleteProps> = ({fn}) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button>Delete</Button>
+        <Button variant={'destructive'}>Delete</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -32,7 +32,7 @@ const DeleteButton: React.FC<DeleteProps> = ({fn}) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={fn}>Delete</AlertDialogAction>
+          <AlertDialogAction className="p-0" onClick={fn}><Button variant={'destructive'}>Delete</Button></AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
