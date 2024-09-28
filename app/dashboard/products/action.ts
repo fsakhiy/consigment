@@ -37,4 +37,15 @@ const createProduct = async (values: z.infer<typeof productFormSchema>) => {
     return { success: false, error: "An unexpected error occurred." };
   }
 };
-export { getProducts, createProduct };
+
+const deleteProduct = async (id: number) => { 
+  const dp = await prisma.product.delete({
+    where: {
+      id: id
+    }
+  })
+
+  revalidatePath('/dashboard/products')
+  return dp
+}
+export { getProducts, createProduct, deleteProduct };
