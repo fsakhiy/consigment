@@ -9,6 +9,7 @@ import Link from "next/link";
 import { getProducts } from "./action";
 import { DataTable } from "@/components/ui/data-table";
 import { Product, productTableColumn } from "./columns";
+import { Toaster } from "@/components/ui/toaster";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
@@ -17,25 +18,26 @@ const breadcrumbItems = [
 
 export default async function Products() {
   const product = await getProducts()
-  console.log(product)
   const products: Product[] = []
   product.map((item, index) => {
     products.push({
       id: index + 1,
       name: item.name,
       sku: item.sku || '' ,
-      description: item.description || 'no description'
+      description: item.description || 'no description',
+      uuid: item.id
     })
   })
   
   return (
     <PageContainer>
+      <Toaster />
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Product (1)`}
+            title={`Product (${products.length})`}
             description="Manage Product"
           />
 
